@@ -1,0 +1,23 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectID = Schema.ObjectId;
+
+const billSchema = new Schema({
+    id: {type: ObjectID},
+    detail: {type: Array[{
+        id: {type: Number},
+        name: { type : String},
+        image: { type : String},
+        price: {type: Number},
+        quantity: {type: Number},
+    }]},
+    address: { type : String},
+    payment: { type : String},
+    status: {type :Array[{
+        id: {type: Number},
+        name: { type : String},
+        date: { type : String},
+    }]},
+});
+
+module.exports =mongoose.models.bills || mongoose.model('bill', billSchema);

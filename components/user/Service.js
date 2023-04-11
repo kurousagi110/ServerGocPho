@@ -1,5 +1,6 @@
 const productModel = require('./Model');
 
+//tạo acc bằng email
 const registerMail = async (email) => {
     try {
         const checkemail = await productModel.findOne({ email: email });
@@ -15,6 +16,7 @@ const registerMail = async (email) => {
     }
     return false;
 }
+//tao acc bằng số điện thoại
 const registerPhone = async (phonenumber, password) => {
     try {
         const checkPhone = await productModel.findOne({ phonenumber: phonenumber });
@@ -31,6 +33,7 @@ const registerPhone = async (phonenumber, password) => {
     }
     return false;
 }
+//tao acc bằng username
 const registerUser = async (username, password) => {
     try {
         const checkUser = await productModel.findOne({ username: username });
@@ -46,7 +49,7 @@ const registerUser = async (username, password) => {
     }
     return false;
 }
-
+//login bằng email
 const loginEmail = async (email) => {
     try {
         let user = await productModel.findOne({ email: email });
@@ -58,6 +61,7 @@ const loginEmail = async (email) => {
     }
     return false;
 }
+//login bằng số điện thoại
 const loginPhone = async (phonenumber, password) => {
     try {
         let user = await productModel.findOne({ phonenumber: phonenumber, password: password });
@@ -69,6 +73,7 @@ const loginPhone = async (phonenumber, password) => {
     }
     return false;
 }
+//login bằng username
 const loginUser = async (username, password) => {
     try {
         let user = await productModel.findOne({ username: username, password: password });
@@ -80,6 +85,7 @@ const loginUser = async (username, password) => {
     }
     return false;
 }
+//đổi pass 
 const changePassword = async (id, oldpassword, newpassword, confirmpassword) => {
     try {
         let user = await productModel.findOne({ _id: id, password: oldpassword });
@@ -94,6 +100,7 @@ const changePassword = async (id, oldpassword, newpassword, confirmpassword) => 
     }
     return false;
 };
+//sửa thông tin cá nhân
 const editProfile = async (id, username, phonenumber, email, country, fullname, birthday) => {
     try {
         let user = await productModel.findOne({ _id: id });
@@ -106,5 +113,6 @@ const editProfile = async (id, username, phonenumber, email, country, fullname, 
     }
     return false;
 };
+
 
 module.exports = { registerMail, registerPhone, registerUser, loginEmail, loginPhone, loginUser, changePassword, editProfile}

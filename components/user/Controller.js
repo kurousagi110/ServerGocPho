@@ -56,5 +56,27 @@ const editProfile = async (_id, username, phonenumber, email, country, fullname,
         throw error;
     }
 }
+const addAddress = async (_id, address) => {
+    try {
+        return await userServices.addAddress(_id, address);
+    } catch (error) {
+        throw error;
+    }
+}
+const editAddress = async (_id, address) => {
+    try {
+        return await userServices.editAddress(_id, address);
+    } catch (error) {
+        throw error;
+    }
+}
+const deleteAddress = async (_id, address) => {
+    try {
+        return await userServices.deleteAddress(_id, address);
+    } catch (error) {
+        throw error;
+    }
+}
 
-module.exports = {registerMail, registerPhone, registerUser, loginUser, loginEmail, loginPhone, changePassword, editProfile}
+module.exports = {registerMail, registerPhone, registerUser, loginUser, loginEmail, loginPhone, changePassword, editProfile,
+                    }

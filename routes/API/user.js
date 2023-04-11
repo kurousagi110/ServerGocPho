@@ -14,7 +14,7 @@ router.post("/login-phonenumber", async (req, res, next) => {
         'secret', { expiresIn: '1h' });
       //lưu token vào session
       req.session.token = token;
-      return res.status(200).json({ result: true, user: user, token:token });
+      return res.status(200).json({ result: true, user: user._id, token:token });
     } else {
       return res.status(400).json({ result: false, user: null });
     }
@@ -32,7 +32,7 @@ router.post("/login-email", async (req, res, next) => {
         'secret', { expiresIn: '1h' });
       //lưu token vào session
       req.session.token = token;
-      return res.status(200).json({ result: true, user: user, token:token });
+      return res.status(200).json({ result: true, user: user._id, token:token });
     } else {
       return res.status(400).json({ result: false, user: null });
     }
@@ -43,14 +43,14 @@ router.post("/login-email", async (req, res, next) => {
 //http://localhost:3000/user/login-username
 router.post("/login-username", async (req, res, next) => {
   try {
-
+    const { username, password } = req.body;
     const user = await controllerUser.loginUser(username, password);
     if (user) {
       const token = jwt.sign({ _id: user._id },
         'secret', { expiresIn: '1h' });
       //lưu token vào session
       req.session.token = token;
-      return res.status(200).json({ result: true, user: user, token:token });
+      return res.status(200).json({ result: true, user: user._id, token:token });
     } else {
       return res.status(400).json({ result: false, user: null });
     }
@@ -67,12 +67,12 @@ router.post("/register-phonenumber", async (req, res, next) => {
     console.log(phonenumber, password)
     const user = await controllerUser.registerPhone(phonenumber, password);
     if (user) {
-      return res.status(200).json({ result: true, user: user });
+      return res.status(200).json({ result: user });
     } else {
-      return res.status(400).json({ result: false, user: null });
+      return res.status(400).json({ result: false });
     }
   } catch (error) {
-    return res.status(500).json({ result: false, user: null });
+    return res.status(500).json({ result: false });
   }
 });
 //http://localhost:3000/user/register-email
@@ -121,8 +121,8 @@ router.get('/logout', async (req, res, next) => {
 //http://localhost:3000/user/change-password
 router.post("/change-password", async (req, res, next) => {
   try {
-    const {_id, oldpassword, newpassword, confirmpassword } = req.body;
-    const user = await controllerUser.changePassword(_id, oldpassword, newpassword, confirmpassword);
+    const {_id, oldpassword, newpassword } = req.body;
+    const user = await controllerUser.changePassword(_id, oldpassword, newpassword);
     if (user) {
       return res.status(200).json({ result: true });
     } else {
@@ -149,8 +149,50 @@ router.post("/edit-profile", async (req, res, next) => {
   } catch (error) {
     return res.status(500).json({ result: false });
   }
-  
+});
 
+//http://localhost:3000/user/get-profile
+router.post("/get-profile", async (req, res, next) => {
+  try {
+    const { _id } = req.body;
+    const user = await controllerUser.getProfile(_id);
+    if (user) {
+      return res.status(200).json({ result: true, user: user });
+    } else {
+      return res.status(400).json({ result: false, user: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, user: null });
+  }
+});
+//http://localhost:3000/user/add-address
+router.post("/add-address", async (req, res, next) => {
+  try {
+    const { _id, address } = req.body;
+    const user = await controllerUser.addAddress(_id, address);
+    if (user) {
+      return res.status(200).json({ result: true, user: user });
+    } else {
+      return res.status(400).json({ result: false, user: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, user: null });
+  }
+});
+
+//http://localhost:3000/user/delete-address
+router.post("/delete-address", async (req, res, next) => {
+  try {
+    const { _id, address } = req.body;
+    const user = await controllerUser.deleteAddress(_id, address);
+    if (user) {
+      return res.status(200).json({ result: true, user: user });
+    } else {
+      return res.status(400).json({ result: false, user: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, user: null });
+  }
 });
 
 module.exports = router;

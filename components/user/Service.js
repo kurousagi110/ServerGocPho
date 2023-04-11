@@ -3,6 +3,7 @@ const productModel = require('./Model');
 //tạo acc bằng email
 const registerMail = async (email) => {
     try {
+        console.log(email);
         const checkemail = await productModel.findOne({ email: email });
         console.log(checkemail);
         if (!checkemail) {
@@ -76,6 +77,7 @@ const loginPhone = async (phonenumber, password) => {
 //login bằng username
 const loginUser = async (username, password) => {
     try {
+        console.log("@@@@@@@@@@@@",username, password);
         let user = await productModel.findOne({ username: username, password: password });
         if (user) {
             return true, user;
@@ -86,15 +88,13 @@ const loginUser = async (username, password) => {
     return false;
 }
 //đổi pass 
-const changePassword = async (id, oldpassword, newpassword, confirmpassword) => {
+const changePassword = async (id, oldpassword, newpassword) => {
     try {
         let user = await productModel.findOne({ _id: id, password: oldpassword });
         if (user) {
-            if (newpassword == confirmpassword) {
                 user.password = newpassword;
                 await user.save();
-                return true;
-            }
+                return true;            
         }
     } catch (error) {
         console.log('Error in change password service: ', error)
@@ -120,13 +120,29 @@ const editProfile = async (id, username, phonenumber, email, country, fullname, 
     }
     return false;
 };
-//thêm địa chỉ
-const addAddress = async (_id, addresses) => {
+//hiện thông tin cá nhân
+const getProfile = async (_id) => {
     try {
-        let user = await productModel.findById(id);
+        let user = await productModel.findById(_id);
+    if (user) {
+        return user;
+    }
+    } catch (error) {
+        console.log('Error in show profile service: ', error)
+    }
+    return false;
+}
+
+//thêm địa chỉ
+const addAddress = async (_id, address) => {
+    try {
+        console.log("#@!#!@#",_id, address);
+        let user = await productModel.findById(_id);
+        console.log("user",user); 
         if (user) {
-           user.addresses.push({name: addresses});
+           user.addresses.push({name: address});
            await user.save();
+           return true;
         }
     } catch (error) {
         console.log('Error in add address service: ', error)
@@ -134,11 +150,11 @@ const addAddress = async (_id, addresses) => {
     return false;
 };
 //xóa địa chỉ
-const deleteAddress = async (_id, addresses) => {
+const deleteAddress = async (_id, address) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
-           user.addresses.deleteOne({name: addresses});
+            user.addresses = user.addresses.filter((address) => address.name !== address);
            await user.save();
            return true;
         }
@@ -148,12 +164,12 @@ const deleteAddress = async (_id, addresses) => {
     return false;
 }
 //sửa địa chỉ
-const editAddress = async (_id, oldaddresses ,newaddresses) => {
+const editAddress = async (_id, oldaddress ,newaddress) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
-            if(user.addresses.name == oldaddresses){
-                user.addresses.name = newaddresses;
+            if(user.address.name == oldaddress){
+                user.address.name = newaddress;
                 await user.save();
                 return true;
             }
@@ -197,4 +213,4 @@ const searchUser = async (name, age) => {
 
 module.exports = { registerMail, registerPhone, registerUser, loginEmail, loginPhone,
                      loginUser, changePassword, editProfile, addAddress, deleteAddress,
-                    editAddress}
+                    editAddress, getProfile, }

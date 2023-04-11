@@ -42,9 +42,9 @@ const loginUser = async (username, password) => {
         throw error;
     }
 }
-const changePassword = async (_id, oldpassword, newpassword, confirmpassword) => {
+const changePassword = async (_id, oldpassword, newpassword) => {
     try {
-        return await userServices.changePassword(_id, oldpassword, newpassword, confirmpassword);
+        return await userServices.changePassword(_id, oldpassword, newpassword);
     } catch (error) {
         throw error;
     }
@@ -52,6 +52,13 @@ const changePassword = async (_id, oldpassword, newpassword, confirmpassword) =>
 const editProfile = async (_id, username, phonenumber, email, country, fullname, birthday) => {
     try {
         return await userServices.editProfile(_id, username, phonenumber, email, country, fullname, birthday);
+    } catch (error) {
+        throw error;
+    }
+}
+const getProfile = async (_id) => {
+    try {
+        return await userServices.getProfile(_id);
     } catch (error) {
         throw error;
     }
@@ -78,5 +85,5 @@ const deleteAddress = async (_id, address) => {
     }
 }
 
-module.exports = {registerMail, registerPhone, registerUser, loginUser, loginEmail, loginPhone, changePassword, editProfile,
-                    }
+module.exports = {registerMail, registerPhone, registerUser, loginUser, loginEmail, loginPhone, changePassword, editProfile, getProfile,
+                    addAddress, editAddress, deleteAddress, }

@@ -150,11 +150,12 @@ const addAddress = async (_id, address) => {
     return false;
 };
 //xóa địa chỉ
-const deleteAddress = async (_id, address) => {
+const deleteAddress = async (_id, addresse) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
-            user.addresses = user.addresses.filter((address) => address.name !== address);
+            user.addresses = user.addresses.filter((address) => address.name !== addresse);
+            console.log(user.addresses);
            await user.save();
            return true;
         }
@@ -167,20 +168,114 @@ const deleteAddress = async (_id, address) => {
 const editAddress = async (_id, oldaddress ,newaddress) => {
     try {
         let user = await productModel.findById(_id);
+        console.log("user",user.addresses);
         if (user) {
-            if(user.address.name == oldaddress){
-                user.address.name = newaddress;
-                await user.save();
-                return true;
+            for(let i = 0; i < user.addresses.length; i++){
+                if(user.addresses[i].name == oldaddress){
+                    console.log("user",user.addresses[i].name);
+                    user.addresses[i].name = newaddress || user.addresses[i].name;
+                    await user.save();
+                    return true;
+                }
             }
         }
+        return false;
     } catch (error) {
         console.log('Error in edit address service: ', error)
     }
     return false;
 }
-
-
+//thêm sản phẩm yêu thích
+const addFavorite = async (_id, name, price, quantity, image) => {
+    try {
+        let user = await productModel.findById(_id);
+        if (user) {
+            user.favorites.push({name: name, price: price, quantity: quantity, image: image});
+            await user.save();
+            return true;
+        }
+    } catch (error) {
+        console.log('Error in add favorite service: ', error)
+    }
+    return false;
+}
+//xóa sản phẩm yêu thích
+const deleteFavorite = async (_id, name) => {
+    try {
+        let user = await productModel.findById(_id);
+        if (user) {
+            for(let i = 0; i < user.favorites.length; i++){
+                if(user.favorites[i].name == name){
+                    user.favorites.splice(i, 1);
+                    await user.save();
+                    return true;
+                }
+            }
+        }
+    } catch (error) {
+        console.log('Error in delete favorite service: ', error)
+    }
+    return false;
+}
+//thêm sản phẩm vào giỏ hàng
+const addCart = async (_id, name, price, quantity, image) => {
+    try {
+        let user = await productModel.findById(_id);
+        if (user) {
+            for(let i = 0; i < user.carts.length; i++){
+                if(user.carts[i].name == name){
+                    user.carts[i].quantity += quantity;
+                    await user.save();
+                    return true;
+                }
+            }
+        }else{
+            user.carts.push({
+                name: name, 
+                price: price, 
+                quantity: quantity, 
+                image: image
+            });
+            await user.save();
+            return true;
+        }
+    } catch (error) {
+        console.log('Error in add cart service: ', error)
+    }
+    return false;
+}
+//xóa sản phẩm trong giỏ hàng
+const deleteCart = async (_id, name) => {
+    try {
+        let user = await productModel.findById(_id);
+        if (user) {
+            for(let i = 0; i < user.carts.length; i++){
+                if(user.carts[i].name == name){
+                    user.carts.splice(i, 1);
+                    await user.save();
+                    return true;
+                }
+            }
+        }
+    } catch (error) {
+        console.log('Error in delete cart service: ', error)
+    }
+    return false;
+}
+//set status để xóa tài khoản
+const setStatus = async (_id, status) => {
+    try {
+        let user = await productModel.findById(_id);
+        if (user) {
+            user.status = status;
+            await user.save();
+            return true;
+        }
+    } catch (error) {
+        console.log('Error in set status service: ', error)
+    }
+    return false;
+};
 const searchUser = async (name, age) => {
     try {
         let query = {};
@@ -213,4 +308,4 @@ const searchUser = async (name, age) => {
 
 module.exports = { registerMail, registerPhone, registerUser, loginEmail, loginPhone,
                      loginUser, changePassword, editProfile, addAddress, deleteAddress,
-                    editAddress, getProfile, }
+                    editAddress, getProfile, addFavorite, deleteFavorite, addCart, deleteCart,setStatus,}

@@ -70,9 +70,9 @@ const addAddress = async (_id, address) => {
         throw error;
     }
 }
-const editAddress = async (_id, address) => {
+const editAddress = async (_id,oldaddress ,newaddress) => {
     try {
-        return await userServices.editAddress(_id, address);
+        return await userServices.editAddress(_id, oldaddress, newaddress);
     } catch (error) {
         throw error;
     }
@@ -84,6 +84,34 @@ const deleteAddress = async (_id, address) => {
         throw error;
     }
 }
+const addFavorite = async (_id, name, price, quantity, image) => {
+    try {
+        return await userServices.addFavorite(_id, name, price, quantity, image);
+    } catch (error) {
+        throw error;
+    }
+}
+const deleteFavorite = async (_id, name) => {
+    try {
+        return await userServices.deleteFavorite(_id, name);
+    } catch (error) {
+        throw error;
+    }
+}
+const addCart = async (_id, name, price, quantity, image) => {
+    try {
+        return await userServices.addCart(_id, name, price, quantity, image);
+    } catch (error) {
+        throw error;
+    }
+}
+const deleteCart = async (_id, name) => {
+    try {
+        return await userServices.deleteCart(_id, name);
+    } catch (error) {
+        throw error;
+    }
+}
 
 module.exports = {registerMail, registerPhone, registerUser, loginUser, loginEmail, loginPhone, changePassword, editProfile, getProfile,
-                    addAddress, editAddress, deleteAddress, }
+                    addAddress, editAddress, deleteAddress, addFavorite, deleteFavorite, addCart, deleteCart}

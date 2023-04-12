@@ -194,5 +194,75 @@ router.post("/delete-address", async (req, res, next) => {
     return res.status(500).json({ result: false, user: null });
   }
 });
+//http://localhost:3000/user/edit-address
+router.post("/edit-address", async (req, res, next) => {
+  try {
+    const { _id, address, newaddress } = req.body;
+    const user = await controllerUser.editAddress(_id, address, newaddress);
+    if (user) {
+      return res.status(200).json({ result: true, user: user });
+    } else {
+      return res.status(400).json({ result: false, user: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, user: null });
+  }
+});
+//http://localhost:3000/user/add-favorite
+router.post("/add-favorite", async (req, res, next) => {
+  try {
+    const {_id, name, price, quantity, image } = req.body;
+    const user = await controllerUser.addFavorite(_id, name, price, quantity, image);
+    if (user) {
+      return res.status(200).json({ result: true, user: user });
+    } else {
+      return res.status(400).json({ result: false, user: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, user: null });
+  }
+});
+//http://localhost:3000/user/delete-favorite
+router.post("/delete-favorite", async (req, res, next) => {
+  try {
+    const {_id, name } = req.body;
+    const user = await controllerUser.deleteFavorite(_id, name);
+    if (user) {
+      return res.status(200).json({ result: true, user: user });
+    } else {
+      return res.status(400).json({ result: false, user: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, user: null });
+  }
+});
+//http://localhost:3000/user/add-cart
+router.post("/add-cart", async (req, res, next) => {
+  try {
+    const {_id, name, price, quantity, image } = req.body;
+    const user = await controllerUser.addCart(_id, name, price, quantity, image);
+    if (user) {
+      return res.status(200).json({ result: true, user: user });
+    } else {
+      return res.status(400).json({ result: false, user: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, user: null });
+  }
+});
 
+//http://localhost:3000/user/delete-cart
+router.post("/delete-cart", async (req, res, next) => {
+  try {
+    const {_id, name } = req.body;
+    const user = await controllerUser.deleteCart(_id, name);
+    if (user) {
+      return res.status(200).json({ result: true, user: user });
+    } else {
+      return res.status(400).json({ result: false, user: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, user: null });
+  }
+});
 module.exports = router;

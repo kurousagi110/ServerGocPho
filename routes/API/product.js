@@ -12,7 +12,7 @@ router.get("/get-categories", (req, res, next) => {});
 router.get("/products/:id/details", (req, res, next) => {});
 
 // /products?search=:query : tim kiem san pham theo query
-router.get("products", (req, res, next) => {});
+router.get("/products", (req, res, next) => {});
 
 // ------------
 

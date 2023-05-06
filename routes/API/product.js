@@ -1,70 +1,101 @@
 var express = require('express');
 var router = express.Router();
+const productService = require('../../components/product/Controller');
+const categoryService = require('../../components/category/Controller');
 
 //PRODUCT METHOD
-// /get-products : lay danh sach san pham
-router.get("/get-products", (req, res, next) => {});
+//http://localhost:3000/product
 
-// /get-categories : lay danh sach danh muc
-router.get("/get-categories", (req, res, next) => {});
-
-// /products/:id/details : hien thi chi tiet san pham theo id
-router.get("/products/:id/details", (req, res, next) => {});
-
-// /products?search=:query : tim kiem san pham theo query
-router.get("products", (req, res, next) => {});
-
-// ------------
-
-// PRODUCT/FAVORITE
-
-// /get-products/favorite : lay danh sach yeu thich
-router.get("/get-products/favorite", (req, res, next) => {});
-
-// /products/favorite/:id/delete : xoa san pham ra khoi danh sach yeu thich bang id
-router.get("/products/favorite/:id/delete", (req, res, next) => {});
-
-
-//CART METHOD
-
-// /cart/get-products : lay danh sach san pham trong gio hang
-router.get("/cart/get-products", (req, res, next) => {});
-
-// /cart/:id/add : Add 1 sản phẩm từ shop vào trong giỏ hàng
-router.post("cart/:id/add", (req, res, next) => {});
-
-// /cart/:id/delete : Xoa san pham ra khoi gio hang theo id
-router.get("cart/:id/delete", (req, res, next) => {
-  const { id } = req.params;
+//http://localhost:3000/product/getAllProducts
+router.get('/getAllProducts', async function (req, res, next) {
+    try {
+        const result = await productService.getAllProducts();
+        if (result) {
+            return res.status(200).json({ result: true, products: result });
+        }else{
+            return res.status(400).json({ result: false, products: null });
+        }
+    } catch (error) {
+        return res.status(500).json({ result: false, user: null });
+    }
 });
 
-// /cart/checkout : Update lai DB products
-router.post("/cart/checkout", (req, res, next) => {
-  const [] = req.body;
-});
-// Không có link thay đổi số lượng của Object vì nó sẽ thay đổi trong Store
-//Sau đó gọi link /cart/checkout để đẩy trong Store đi
-
-// ==========================
-
-// CARD
-
-// /get-cards : lay danh sach card
-router.get("/get-cards", (req, res, next) => {});
-
-// /cards/new: them card
-router.post("/cards/new", (req, res, next) => {
-  //card number: 16 unique nums
-  //expiration date: ngay het han
-  //cardholder name: ten cua chu? card
-  //security code: 3 nums = CCV
-
-  const { cardNumber, expirationDate, cardHolderName, CCV } = req.body;
+//http://localhost:3000/product/getProductById
+router.get('/getProductById/:id', async function (req, res, next) {
+    try {
+        const id = req.params.id;
+        const result = await productService.getProductById(id);
+        if (result) {
+            return res.status(200).json({ result: true, product: result });
+        }else{
+            return res.status(400).json({ result: false, product: null });
+        }
+    } catch (error) {
+        return res.status(500).json({ result: false, product: null });
+    }
 });
 
-// /cards/:id/delete : xoa card theo id
-router.get("/cards/:id/delete", (req, res, next) => {
-  const { id } = req.params;
+//http://localhost:3000/product/addProduct
+router.post('/addProduct', async function (req, res, next) {
+    try {
+        const { name,price,quantity,detail } = req.body;
+        const result = await productService.addProduct(name,price,quantity,detail);
+        if (result) {
+            return res.status(200).json({ result: true, product: result });
+        }else{
+            return res.status(400).json({ result: false, product: null });
+        }
+    } catch (error) {
+        return res.status(500).json({ result: false, product: null });
+    }
 });
+
+//http://localhost:3000/product/addImage
+router.post('/addImage', async function (req, res, next) {
+    try {
+        const { id,images } = req.body;
+        const result = await productService.addImage(id,images);
+        if (result) {
+            return res.status(200).json({ result: true, product: result });
+        }else{
+            return res.status(400).json({ result: false, product: null });
+        }
+    } catch (error) {
+        return res.status(500).json({ result: false, product: null });
+    }
+});
+
+//http://localhost:3000/product/updateProduct
+router.put('/updateProduct/:id', async function (req, res, next) {
+    try {
+        const id = req.params.id;
+        const { name,price,quantity,detail } = req.body;
+        const result = await productService.updateProduct(id,name,price,quantity,detail);
+        if (result) {
+            return res.status(200).json({ result: true, product: result });
+        }else{
+            return res.status(400).json({ result: false, product: null });
+        }
+    } catch (error) {
+        return res.status(500).json({ result: false, product: null });
+    }
+});
+
+//http://localhost:3000/product/deleteProduct
+router.delete('/deleteProduct/:id', async function (req, res, next) {
+    try {
+        const id = req.params.id;
+        const result = await productService.deleteProduct(id);
+        if (result) {
+            return res.status(200).json({ result: true, product: result });
+        }else{
+            return res.status(400).json({ result: false, product: null });
+        }
+    } catch (error) {
+        return res.status(500).json({ result: false, product: null });
+    }
+});
+
+
 
 module.exports = router;

@@ -265,4 +265,19 @@ router.post("/delete-cart", async (req, res, next) => {
     return res.status(500).json({ result: false, user: null });
   }
 });
+
+//http://localhost:3000/user/set-status
+router.post("/set-status", async (req, res, next) => {
+  try {
+    const {_id, status } = req.body;
+    const user = await controllerUser.setStatus(_id, status);
+    if (user) {
+      return res.status(200).json({ result: true, user: user });
+    } else {
+      return res.status(400).json({ result: false, user: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, user: null });
+  }
+});
 module.exports = router;

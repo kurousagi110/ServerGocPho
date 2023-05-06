@@ -49,6 +49,7 @@ const changePassword = async (_id, oldpassword, newpassword) => {
         throw error;
     }
 }
+//profile
 const editProfile = async (_id, username, phonenumber, email, country, fullname, birthday) => {
     try {
         return await userServices.editProfile(_id, username, phonenumber, email, country, fullname, birthday);
@@ -63,6 +64,8 @@ const getProfile = async (_id) => {
         throw error;
     }
 }
+
+//địa chỉ
 const addAddress = async (_id, address) => {
     try {
         return await userServices.addAddress(_id, address);
@@ -84,6 +87,8 @@ const deleteAddress = async (_id, address) => {
         throw error;
     }
 }
+
+//danh sách thích sản phẩm
 const addFavorite = async (_id, name, price, quantity, image) => {
     try {
         return await userServices.addFavorite(_id, name, price, quantity, image);
@@ -98,6 +103,8 @@ const deleteFavorite = async (_id, name) => {
         throw error;
     }
 }
+
+//giỏ hàng
 const addCart = async (_id, name, price, quantity, image) => {
     try {
         return await userServices.addCart(_id, name, price, quantity, image);
@@ -113,5 +120,13 @@ const deleteCart = async (_id, name) => {
     }
 }
 
+//set status
+const setStatus = async (_id, status) => {
+    try {
+        return await userServices.setStatus(_id, status);
+    } catch (error) {
+        throw error;
+    }
+}
 module.exports = {registerMail, registerPhone, registerUser, loginUser, loginEmail, loginPhone, changePassword, editProfile, getProfile,
-                    addAddress, editAddress, deleteAddress, addFavorite, deleteFavorite, addCart, deleteCart}
+                    addAddress, editAddress, deleteAddress, addFavorite, deleteFavorite, addCart, deleteCart, setStatus}

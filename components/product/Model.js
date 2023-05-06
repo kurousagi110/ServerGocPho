@@ -7,19 +7,12 @@ const productSchema = new Schema({
     name: { type : String},
     price: {type: Number},
     quantity: {type: Number},
-    images: [{ 
+    images: [{
         id: {type: ObjectID},
         name: {type: String }
     }],
     detail: { type : String},
-    category: { type : String},
-    favorites: [{ 
-        id: {type: Number},
-        name: { type : String},
-        price: {type: Number},
-        quantity: {type: Number},
-        image: { type : String},
-     }],
+    category: { type : ObjectID, ref: 'category'},
     status: {type: Number},
 });
 

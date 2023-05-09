@@ -5,7 +5,7 @@ const ObjectID = Schema.ObjectId;
 const billSchema = new Schema({
     id: {type: ObjectID},
     detail: [{
-        id: {type: Number},
+        id: {type: ObjectID},
         name: { type : String},
         image: { type : String},
         price: {type: Number},
@@ -15,6 +15,7 @@ const billSchema = new Schema({
     payment: { type : String},
     status: [{
         id: {type: Number},
+        number: {type: Number},
         name: { type : String},
         date: { type : String},
     }],

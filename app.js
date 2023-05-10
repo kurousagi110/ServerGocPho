@@ -42,8 +42,9 @@ app.use(cors({
 }));
 
 //mongoose.connect('mongodb://127.0.0.1:27017/gocpho?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false', {
+//mongoose.connect('mongodb+srv://hoatrinh14020:a123456@cluster0.lqnicyx.mongodb.net/?retryWrites=true&w=majority', {
 //conect to mongodb
-mongoose.connect('mongodb+srv://hoatrinh14020:a123456@cluster0.lqnicyx.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('mongodb://127.0.0.1:27017/gocpho?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })

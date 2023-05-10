@@ -89,9 +89,9 @@ const deleteAddress = async (_id, address) => {
 }
 
 //danh sách thích sản phẩm
-const addFavorite = async (_id, name, price, quantity, image) => {
+const addFavorite = async (_id,idProduct, name, price, image) => {
     try {
-        return await userServices.addFavorite(_id, name, price, quantity, image);
+        return await userServices.addFavorite(_id,idProduct, name, price, image);
     } catch (error) {
         throw error;
     }

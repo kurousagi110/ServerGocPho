@@ -211,8 +211,8 @@ router.post("/edit-address", async (req, res, next) => {
 //http://localhost:3000/user/add-favorite
 router.post("/add-favorite", async (req, res, next) => {
   try {
-    const {_id, name, price, quantity, image } = req.body;
-    const user = await controllerUser.addFavorite(_id, name, price, quantity, image);
+    const {_id,idProduct, name, price, image} = req.body;
+    const user = await controllerUser.addFavorite(_id,idProduct, name, price, image);
     if (user) {
       return res.status(200).json({ result: true, user: user });
     } else {

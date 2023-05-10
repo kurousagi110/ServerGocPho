@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const productController = require('../../components/product/Controller');
 const categoryService = require('../../components/category/Controller');
+const upload = require('../../components/middle/upload');
 
 //PRODUCT METHOD
 //http://localhost:3000/product

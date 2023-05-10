@@ -152,13 +152,8 @@ const addAddress = async (_id, address) => {
 //xóa địa chỉ
 const deleteAddress = async (_id, addresse) => {
     try {
-        let user = await productModel.findById(_id);
-        if (user) {
-            user.addresses = user.addresses.filter((address) => address.name !== addresse);
-            console.log(user.addresses);
-           await user.save();
+            await productModel.findByIdAndDelete(_id);
            return true;
-        }
     } catch (error) {
         console.log('Error in delete address service: ', error)
     }
@@ -186,11 +181,11 @@ const editAddress = async (_id, oldaddress ,newaddress) => {
     return false;
 }
 //thêm sản phẩm yêu thích
-const addFavorite = async (_id, name, price, quantity, image) => {
+const addFavorite = async (_id,idProduct, name, price, image) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
-            user.favorites.push({name: name, price: price, quantity: quantity, image: image});
+            user.favorites.push({idProduct: idProduct,name: name, price: price, image: image});
             await user.save();
             return true;
         }

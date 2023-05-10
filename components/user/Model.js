@@ -4,26 +4,26 @@ const ObjectID = Schema.ObjectId;
 
 const userSchema = new Schema({
     id: {type: ObjectID},
-    email: { type : String, unique: true ,default: null},
+    email: { type : String,default: null},
     password: { type : String ,default: null},
-    phonenumber: { type : String, unique: true ,default: null},
+    phonenumber: { type : String, default: null},
     country: { type : String ,default: null},
-    username: { type : String, unique: true ,default: null},
+    username: { type : String, default: null},
     addresses: [{
-        id: {type: Number},
+        id: {type: ObjectID},
         name: { type : String},
     }], default: [],
     fullname: { type : String ,default: null},
     birthday: { type : String ,default: null},
     favorites: [{
-        id: {type: Number},
+        id: {type: ObjectID},
+        idProduct: { type: Number },
         name: { type : String},
         price: {type: Number},
-        quantity: {type: Number},
         image: { type : String},
     }], default: [],
     carts:[{
-        id: {type: Number},
+        id: {type: ObjectID},
         name: { type : String },
         price: {type: Number},
         quantity: {type: Number},

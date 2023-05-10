@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
-const categoryService = require('../../components/category/Controller');
+const categoryController = require('../../components/category/Controller');
+const upload = require('../../components/middle/upload');
 
 //CATEGORY METHOD
 //http://localhost:3000/category
 
-//http://localhost:3000/category/getAllCategories
-router.get('/getAllCategories', async function(req, res, next) {
+//http://localhost:3000/category/get-all-categories
+router.get('/get-all-categories', async function(req, res, next) {
     try {
-        const result = await categoryService.getAllCategories();
+        const result = await categoryController.getAllCategories();
         res.json(result);
     } catch (error) {
         console.log('Error in get all categories controller: ', error)
@@ -16,11 +17,11 @@ router.get('/getAllCategories', async function(req, res, next) {
     return false;
 });
 
-//http://localhost:3000/category/getCategoryById
-router.get('/getCategoryById/:id', async function(req, res, next) {
+//http://localhost:3000/category/get-category-by-id
+router.get('/get-category-by-id/:id', async function(req, res, next) {
     try {
         const id =  req.params.id;
-        const result = await categoryService.getCategoryById(id);
+        const result = await categoryController.getCategoryById(id);
         res.json(result);
     } catch (error) {
         console.log('Error in get category by id controller: ', error)   
@@ -28,61 +29,93 @@ router.get('/getCategoryById/:id', async function(req, res, next) {
     return false;
 });
 
-//http://localhost:3000/category/addCategory
-router.post('/addCategory', async function(req, res, next) {
+//http://localhost:3000/category/add-category
+router.post('/add-category', async function(req, res, next) {
     try {
         const name = req.body.name;
-        const result = await categoryService.addCategory(name);
+        const result = await categoryController.addCategory(name);
         res.json(result);
     }catch (error) {
         console.log('Error in add category controller: ', error)
     }
 });
 
-//http://localhost:3000/category/updateCategory
-router.put('/updateCategory', async function(req, res, next) {
+//http://localhost:3000/category/update-category
+router.put('/update-category', async function(req, res, next) {
     try {
         const id = req.body.id;
         const name = req.body.name;
-        const result = await categoryService.updateCategory(id, name);
+        const result = await categoryController.updateCategory(id, name);
         res.json(result);
     } catch (error) {
         console.log('Error in update category controller: ', error)
     }
 });
 
-//http://localhost:3000/category/deleteCategory
-router.delete('/deleteCategory/:id', async function(req, res, next) {
+//http://localhost:3000/category/delete-category/:id
+router.delete('/delete-category/:id', async function(req, res, next) {
     try {
         const id = req.params.id;
-        const result = await categoryService.deleteCategory(id);
+        const result = await categoryController.deleteCategory(id);
         res.json(result);
     } catch (error) {
         console.log('Error in delete category controller: ', error)
     }
 });
 
-//http://localhost:3000/category/addImage
-router.post('/addImage', async function(req, res, next) {
+//http://localhost:3000/category/add-image
+router.post('/add-image', async function(req, res, next) {
     try {
         const id = req.body.id;
         const image = req.body.image;
-        const result = await categoryService.addImage(id, image);
+        const result = await categoryController.addImage(id, image);
         res.json(result);
     } catch (error) {
         console.log('Error in add image controller: ', error)
     }
 });
 
-//http://localhost:3000/category/deleteImage
-router.delete('/deleteImage/:id', async function(req, res, next) {
+//http://localhost:3000/category/delete-image
+router.delete('/delete-image/:id', async function(req, res, next) {
     try {
         const id = req.params.id;
-        const result = await categoryService.deleteImage(id);
+        const result = await categoryController.deleteImage(id);
         res.json(result);
     } catch (error) {
         console.log('Error in delete image controller: ', error)
     }
 });
+
+//upload ảnh lên server
+// http://localhost:3000/category/upload-image
+router.post('/upload-image', [upload.single('image')], async function (req, res, next) {
+    try {
+      let { file } = req;
+      if (file) {
+        let path = `http://localhost:3000/images/${file.filename}`; //để ip của máy
+        return res.status(200).json({ result: true, path });
+      }
+      return res.status(400).json({ result: false });
+    } catch (error) {
+      console.log('upload image error: ', error);
+      return res.status(500).json({ result: false });
+    }
+  });
+  // http://localhost:3000/category/upload-images
+  router.post('/upload-images', [upload.array('images', 10)], async function (req, res, next) {
+    try {
+      let files = req.files;
+      if (files && files.length > 0) {
+        let paths = files.map((file) => {
+          return `http://localhost:3000/images/${file.filename}`;
+        });
+        return res.status(200).json({ result: true, paths });
+      }
+      return res.status(400).json({ result: false });
+    } catch (error) {
+      console.log('upload image error: ', error);
+      return res.status(500).json({ result: false });
+    }
+  });
 
 module.exports = router;

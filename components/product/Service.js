@@ -16,9 +16,9 @@ const getProductById = async (id) => {
     }
     return false;
 };
-const addProduct = async (name, price, quantity, detail) => {
+const addProduct = async (name, price, quantity, detail, category) => {
     try {
-        return await productModel.create({ name, price, quantity, detail });
+        return await productModel.create({ name, price, quantity, detail, category});
     } catch (error) {
         console.log('Error in add product service: ', error)
     }

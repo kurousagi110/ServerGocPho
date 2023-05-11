@@ -39,8 +39,8 @@ router.get('/get-product-by-id/:id', async function (req, res, next) {
 //http://localhost:3000/product/add-product
 router.post('/add-product', async function (req, res, next) {
     try {
-        const { name,price,quantity,detail } = req.body;
-        const result = await productController.addProduct(name,price,quantity,detail);
+        const { name,price,quantity,detail, category} = req.body;
+        const result = await productController.addProduct(name,price,quantity,detail,category);
         if (result) {
             return res.status(200).json({ result: true, product: result });
         }else{

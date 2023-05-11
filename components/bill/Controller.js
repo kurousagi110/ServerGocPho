@@ -63,4 +63,13 @@ const updateBillAddress = async (id, address) => {
         throw new Error(error);
     }
 };
-module.exports = { addBill, getAllBill, deleteBill, getBillById, updateBillStatus, updateBillDetail, updateBillAddress };
+//add more bill detail
+const addMoreBillDetail = async (id, name, img, price, quantity) => {
+    try {
+        const bill = await billService.addMoreBillDetail(id, name, img, price, quantity);
+        return bill;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+module.exports = { addBill, getAllBill, deleteBill, getBillById, updateBillStatus, updateBillDetail, updateBillAddress, addMoreBillDetail };

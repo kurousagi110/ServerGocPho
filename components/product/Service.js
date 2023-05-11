@@ -16,9 +16,9 @@ const getProductById = async (id) => {
     }
     return false;
 };
-const addProduct = async (name,price,quantity,detail) => {
+const addProduct = async (name, price, quantity, detail) => {
     try {
-        return await productModel.create({name,price,quantity,detail});
+        return await productModel.create({ name, price, quantity, detail });
     } catch (error) {
         console.log('Error in add product service: ', error)
     }
@@ -27,8 +27,16 @@ const addProduct = async (name,price,quantity,detail) => {
 const addImage = async (id, image) => {
     try {
         let product = await productModel.findById(id);
+        console.log(product);
+        console.log("1111" + image);
+        console.log(product.images);
         if (product) {
-            product.image = image;
+            for (var i = 0; i < product.images.length; i++) {
+                if (product.images[i] == image) {
+                    return true;
+                }
+            }
+            product.images.push( {name : image});
             product.save();
             return true;
         }
@@ -37,7 +45,7 @@ const addImage = async (id, image) => {
     }
     return false;
 };
-const updateProduct = async (id,name,price,quantity,detail,category) => {
+const updateProduct = async (id, name, price, quantity, detail, category) => {
     try {
         let product = await productModel.findById(id);
         if (product) {
@@ -88,4 +96,4 @@ const updateStatus = async (id, status) => {
     }
     return false;
 };
-module.exports = { getAllProducts, getProductById, addProduct, addImage, updateProduct, deleteProduct, deleteImage, updateStatus}
+module.exports = { getAllProducts, getProductById, addProduct, addImage, updateProduct, deleteProduct, deleteImage, updateStatus }

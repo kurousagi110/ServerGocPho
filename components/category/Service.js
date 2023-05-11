@@ -54,7 +54,7 @@ const addImage = async (id, image) => {
     try {
         let category = await categoryModel.findById(id);
         if (category) {
-            category.image = image;
+            category.images.push( {name : image});
             category.save();
             return true;
         }
@@ -64,13 +64,17 @@ const addImage = async (id, image) => {
     return false;
 };
 
-const deleteImage = async (id, imageId) => {
+const deleteImage = async (id, name) => {
     try {
         let category = await categoryModel.findById(id);
         if (category) {
-            category.image = "";
-            category.save();
-            return true;
+            for (let i = 0; i < category.images.length; i++) {
+                if (category.images[i].name === name) {
+                    category.images.splice(i, 1);
+                    category.save();
+                    return true;
+                }
+            }
         }
     } catch (error) {
         console.log('Error in delete image service: ', error)

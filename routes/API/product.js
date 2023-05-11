@@ -83,7 +83,7 @@ router.put('/update-product/:id', async function (req, res, next) {
 });
 
 //http://localhost:3000/product/delete-product
-router.delete('/delete-product/:id', async function (req, res, next) {
+router.post('/delete-product/:id', async function (req, res, next) {
     try {
         const id = req.params.id;
         const result = await productController.deleteProduct(id);

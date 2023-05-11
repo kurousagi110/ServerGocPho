@@ -27,9 +27,9 @@ const addProduct = async (name,price,quantity,detail) => {
     return false;
 };
 
-const addImage = async (id, image) => {
+const addImage = async (id, images) => {
     try {
-        return await productService.addImage(id, image);
+        return await productService.addImage(id, images);
     } catch (error) {
         console.log('Error in add image controller: ', error)
     }

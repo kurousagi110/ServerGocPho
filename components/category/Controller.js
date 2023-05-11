@@ -54,9 +54,9 @@ const addImage = async (id, image) => {
     return false;
 };
 
-const deleteImage = async (id) => {
+const deleteImage = async (id, name) => {
     try {
-        return await categoryService.deleteImage(id);
+        return await categoryService.deleteImage(id, name);
     } catch (error) {
         console.log('Error in delete image controller: ', error)
     }

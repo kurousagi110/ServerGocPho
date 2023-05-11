@@ -17,7 +17,7 @@ const userSchema = new Schema({
     birthday: { type : String ,default: null},
     favorites: [{
         id: {type: ObjectID},
-        idProduct: { type: Number },
+        idProduct: { type: String },
         name: { type : String},
         price: {type: Number},
         image: { type : String},

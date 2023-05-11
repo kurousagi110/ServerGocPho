@@ -77,7 +77,7 @@ const loginPhone = async (phonenumber, password) => {
 //login bằng username
 const loginUser = async (username, password) => {
     try {
-        console.log("@@@@@@@@@@@@",username, password);
+        console.log("@@@@@@@@@@@@", username, password);
         let user = await productModel.findOne({ username: username, password: password });
         if (user) {
             return true, user;
@@ -92,9 +92,9 @@ const changePassword = async (id, oldpassword, newpassword) => {
     try {
         let user = await productModel.findOne({ _id: id, password: oldpassword });
         if (user) {
-                user.password = newpassword;
-                await user.save();
-                return true;            
+            user.password = newpassword;
+            await user.save();
+            return true;
         }
     } catch (error) {
         console.log('Error in change password service: ', error)
@@ -124,9 +124,9 @@ const editProfile = async (id, username, phonenumber, email, country, fullname, 
 const getProfile = async (_id) => {
     try {
         let user = await productModel.findById(_id);
-    if (user) {
-        return user;
-    }
+        if (user) {
+            return user;
+        }
     } catch (error) {
         console.log('Error in show profile service: ', error)
     }
@@ -136,13 +136,13 @@ const getProfile = async (_id) => {
 //thêm địa chỉ
 const addAddress = async (_id, address) => {
     try {
-        console.log("#@!#!@#",_id, address);
+        console.log("#@!#!@#", _id, address);
         let user = await productModel.findById(_id);
-        console.log("user",user); 
+        console.log("user", user);
         if (user) {
-           user.addresses.push({name: address});
-           await user.save();
-           return true;
+            user.addresses.push({ name: address });
+            await user.save();
+            return true;
         }
     } catch (error) {
         console.log('Error in add address service: ', error)
@@ -152,22 +152,31 @@ const addAddress = async (_id, address) => {
 //xóa địa chỉ
 const deleteAddress = async (_id, addresse) => {
     try {
-            await productModel.findByIdAndDelete(_id);
-           return true;
+        let user = await productModel.findById(_id);
+        if (user) {
+            for (let i = 0; i < user.addresses.length; i++) {
+                if (user.addresses[i].name == addresse) {
+                    user.addresses.splice(i, 1);
+                    await user.save();
+                    return true;
+                }
+            }
+        }
+        return true;
     } catch (error) {
         console.log('Error in delete address service: ', error)
     }
     return false;
 }
 //sửa địa chỉ
-const editAddress = async (_id, oldaddress ,newaddress) => {
+const editAddress = async (_id, oldaddress, newaddress) => {
     try {
         let user = await productModel.findById(_id);
-        console.log("user",user.addresses);
+        console.log("user", user.addresses);
         if (user) {
-            for(let i = 0; i < user.addresses.length; i++){
-                if(user.addresses[i].name == oldaddress){
-                    console.log("user",user.addresses[i].name);
+            for (let i = 0; i < user.addresses.length; i++) {
+                if (user.addresses[i].name == oldaddress) {
+                    console.log("user", user.addresses[i].name);
                     user.addresses[i].name = newaddress || user.addresses[i].name;
                     await user.save();
                     return true;
@@ -181,11 +190,11 @@ const editAddress = async (_id, oldaddress ,newaddress) => {
     return false;
 }
 //thêm sản phẩm yêu thích
-const addFavorite = async (_id,idProduct, name, price, image) => {
+const addFavorite = async (_id, idProduct, name, price, image) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
-            user.favorites.push({idProduct: idProduct,name: name, price: price, image: image});
+            user.favorites.push({ idProduct: idProduct, name: name, price: price, image: image });
             await user.save();
             return true;
         }
@@ -199,8 +208,8 @@ const deleteFavorite = async (_id, name) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
-            for(let i = 0; i < user.favorites.length; i++){
-                if(user.favorites[i].name == name){
+            for (let i = 0; i < user.favorites.length; i++) {
+                if (user.favorites[i].name == name) {
                     user.favorites.splice(i, 1);
                     await user.save();
                     return true;
@@ -216,24 +225,23 @@ const deleteFavorite = async (_id, name) => {
 const addCart = async (_id, name, price, quantity, image) => {
     try {
         let user = await productModel.findById(_id);
-        if (user) {
-            for(let i = 0; i < user.carts.length; i++){
-                if(user.carts[i].name == name){
-                    user.carts[i].quantity += quantity;
-                    await user.save();
-                    return true;
-                }
+        console.log("user", user);
+        console.log("user cart", user.carts);
+        for (let i = 0; i < user.carts.length; i++) {
+            if (user.carts[i].name == name) {
+                user.carts[i].quantity += quantity;
+                await user.save();
+                return true;
             }
-        }else{
-            user.carts.push({
-                name: name, 
-                price: price, 
-                quantity: quantity, 
-                image: image
-            });
-            await user.save();
-            return true;
         }
+        user.carts.push({
+            name: name,
+            price: price,
+            quantity: quantity,
+            image: image
+        });
+        await user.save();
+        return true;
     } catch (error) {
         console.log('Error in add cart service: ', error)
     }
@@ -244,8 +252,8 @@ const deleteCart = async (_id, name) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
-            for(let i = 0; i < user.carts.length; i++){
-                if(user.carts[i].name == name){
+            for (let i = 0; i < user.carts.length; i++) {
+                if (user.carts[i].name == name) {
                     user.carts.splice(i, 1);
                     await user.save();
                     return true;
@@ -301,6 +309,8 @@ const searchUser = async (name, age) => {
     return [];
 }
 
-module.exports = { registerMail, registerPhone, registerUser, loginEmail, loginPhone,
-                     loginUser, changePassword, editProfile, addAddress, deleteAddress,
-                    editAddress, getProfile, addFavorite, deleteFavorite, addCart, deleteCart,setStatus,}
+module.exports = {
+    registerMail, registerPhone, registerUser, loginEmail, loginPhone,
+    loginUser, changePassword, editProfile, addAddress, deleteAddress,
+    editAddress, getProfile, addFavorite, deleteFavorite, addCart, deleteCart, setStatus,
+}

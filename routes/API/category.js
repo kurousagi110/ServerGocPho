@@ -41,7 +41,7 @@ router.post('/add-category', async function(req, res, next) {
 });
 
 //http://localhost:3000/category/update-category
-router.put('/update-category', async function(req, res, next) {
+router.post('/update-category', async function(req, res, next) {
     try {
         const id = req.body.id;
         const name = req.body.name;
@@ -53,7 +53,7 @@ router.put('/update-category', async function(req, res, next) {
 });
 
 //http://localhost:3000/category/delete-category/:id
-router.delete('/delete-category/:id', async function(req, res, next) {
+router.post('/delete-category/:id', async function(req, res, next) {
     try {
         const id = req.params.id;
         const result = await categoryController.deleteCategory(id);
@@ -76,10 +76,11 @@ router.post('/add-image', async function(req, res, next) {
 });
 
 //http://localhost:3000/category/delete-image
-router.delete('/delete-image/:id', async function(req, res, next) {
+router.post('/delete-image/:id', async function(req, res, next) {
     try {
         const id = req.params.id;
-        const result = await categoryController.deleteImage(id);
+        const name = req.body.name;
+        const result = await categoryController.deleteImage(id ,name);
         res.json(result);
     } catch (error) {
         console.log('Error in delete image controller: ', error)

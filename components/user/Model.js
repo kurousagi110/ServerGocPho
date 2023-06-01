@@ -12,6 +12,7 @@ const userSchema = new Schema({
     addresses: [{
         id: {type: ObjectID},
         name: { type : String},
+        status: { type : Number ,default: 0},
     }], default: [],
     fullname: { type : String ,default: null},
     birthday: { type : String ,default: null},
@@ -30,6 +31,7 @@ const userSchema = new Schema({
         image: { type : String },
     }], default: [],
     status : {type: Number, default: 0},
+    avatar: { type : String ,default: "https://i.imgur.com/VVq6KcT.png"},
  });
 
 

@@ -52,10 +52,11 @@ router.post('/add-product', async function (req, res, next) {
 });
 
 //http://localhost:3000/product/add-image
-router.post('/add-image', async function (req, res, next) {
+router.post('/add-image/:_id', async function (req, res, next) {
     try {
-        const { id,images } = req.body;
-        const result = await productController.addImage(id,images);
+        const {images } = req.body;
+        const _id = req.params._id;
+        const result = await productController.addImage(_id,images);
         if (result) {
             return res.status(200).json({ result: true, product: result });
         }else{

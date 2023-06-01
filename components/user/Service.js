@@ -1,3 +1,4 @@
+const { set } = require('mongoose');
 const productModel = require('./Model');
 
 //tạo acc bằng email
@@ -51,11 +52,22 @@ const registerUser = async (username, password) => {
     return false;
 }
 //login bằng email
-const loginEmail = async (email) => {
+const loginEmail = async (email, avatar, fullname) => {
     try {
         let user = await productModel.findOne({ email: email });
+        console.log(user);
         if (user) {
+            user.avatar = avatar;
+            user.fullname = fullname;
             return true, user;
+        } else {
+            let user1 = await productModel.create({
+                email: email,
+                avatar: avatar,
+                fullname: fullname,
+            });
+            console.log(user1, "221312313");
+            return true, user1;
         }
     } catch (error) {
         console.log('Error in login email service: ', error)
@@ -139,10 +151,16 @@ const addAddress = async (_id, address) => {
         console.log("#@!#!@#", _id, address);
         let user = await productModel.findById(_id);
         console.log("user", user);
-        if (user) {
+        if (user.addresses.length == 0) {
+            user.addresses.push({ name: address, status: 1 });
+            await user.save();
+            const result = await productModel.findById(_id);
+            return result.addresses;
+        } else {
             user.addresses.push({ name: address });
             await user.save();
-            return true;
+            const result = await productModel.findById(_id);
+            return result.addresses;
         }
     } catch (error) {
         console.log('Error in add address service: ', error)
@@ -150,36 +168,45 @@ const addAddress = async (_id, address) => {
     return false;
 };
 //xóa địa chỉ
-const deleteAddress = async (_id, addresse) => {
+const deleteAddress = async (_id, idAddress) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
-            for (let i = 0; i < user.addresses.length; i++) {
-                if (user.addresses[i].name == addresse) {
-                    user.addresses.splice(i, 1);
-                    await user.save();
-                    return true;
+            if (user.addresses.length > 1) {
+                for (let i = 0; i < user.addresses.length; i++) {
+                    if (user.addresses[i]._id == idAddress) {
+                        if (user.addresses[i].status === 1) {
+                            return 2;
+                        } else {
+                            user.addresses.splice(i, 1);
+                            await user.save();
+                            const abc = await productModel.findById(_id);
+                            return abc;
+                        }
+                    }
                 }
             }
+            return 1;
         }
-        return true;
+        return false;
     } catch (error) {
         console.log('Error in delete address service: ', error)
     }
     return false;
 }
 //sửa địa chỉ
-const editAddress = async (_id, oldaddress, newaddress) => {
+const editAddress = async (_id, idAddress, newAddress) => {
     try {
         let user = await productModel.findById(_id);
         console.log("user", user.addresses);
         if (user) {
             for (let i = 0; i < user.addresses.length; i++) {
-                if (user.addresses[i].name == oldaddress) {
-                    console.log("user", user.addresses[i].name);
-                    user.addresses[i].name = newaddress || user.addresses[i].name;
+                if (user.addresses[i]._id == idAddress) {
+                    console.log("user", user.addresses[i]._id);
+                    user.addresses[i].name = newAddress || user.addresses[i].name;
                     await user.save();
-                    return true;
+                    const address = await productModel.findById(_id);
+                    return address.addresses[i];
                 }
             }
         }
@@ -194,9 +221,16 @@ const addFavorite = async (_id, idProduct, name, price, image) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
+            for (let i = 0; i < user.favorites.length; i++) {
+                if (user.favorites[i].name == name) {
+                    user.favorites.splice(i, 1);
+                    await user.save();
+                    return 1;
+                }
+            }
             user.favorites.push({ idProduct: idProduct, name: name, price: price, image: image });
             await user.save();
-            return true;
+            return 0;
         }
     } catch (error) {
         console.log('Error in add favorite service: ', error)
@@ -231,8 +265,15 @@ const addCart = async (_id, name, price, quantity, image) => {
             if (user.carts[i].name == name) {
                 user.carts[i].quantity += quantity;
                 await user.save();
-                return true;
+                const result = await productModel.findById(_id);
+                if (result.carts[i].quantity < 1) {
+                    result.carts.splice(i, 1);
+                    await result.save();
+                    return result.carts;
+                }
+                return result.carts;
             }
+
         }
         user.carts.push({
             name: name,
@@ -241,22 +282,24 @@ const addCart = async (_id, name, price, quantity, image) => {
             image: image
         });
         await user.save();
-        return true;
+        const result = await productModel.findById(_id);
+        return result.carts;
     } catch (error) {
         console.log('Error in add cart service: ', error)
     }
     return false;
 }
 //xóa sản phẩm trong giỏ hàng
-const deleteCart = async (_id, name) => {
+const deleteCart = async (_id, idCart) => {
     try {
         let user = await productModel.findById(_id);
         if (user) {
             for (let i = 0; i < user.carts.length; i++) {
-                if (user.carts[i].name == name) {
+                if (user.carts[i]._id == idCart) {
                     user.carts.splice(i, 1);
                     await user.save();
-                    return true;
+                    const resul = await productModel.findById(_id);
+                    return resul.carts;
                 }
             }
         }
@@ -279,6 +322,31 @@ const setStatus = async (_id, status) => {
     }
     return false;
 };
+
+//set status address mặc định
+const setStatusAddress = async (_id, idAddress) => {
+    try {
+        let user = await productModel.findById(_id);
+        if (user) {
+            for (let i = 0; i < user.addresses.length; i++) {
+                if (user.addresses[i]._id == idAddress) {
+                    user.addresses[i].status = 1;
+                    await user.save();
+                } else {
+                    user.addresses[i].status = 0;
+                    await user.save();
+                }
+            }
+            const addresses = await productModel.findById(_id);
+            return addresses.addresses;
+        }
+    } catch (error) {
+        console.log('Error in set status address service: ', error)
+    }
+    return false;
+};
+
+//tìm kiếm
 const searchUser = async (name, age) => {
     try {
         let query = {};
@@ -309,8 +377,26 @@ const searchUser = async (name, age) => {
     return [];
 }
 
+//add cart theo mảng sản phẩm
+const addCartArray = async (_id, carts) => {
+    try {
+        let user = await productModel.findById(_id);
+        if (user) {
+            user.carts.splice(0, user.carts.length);
+            user.carts = carts;
+            await user.save();
+            const result = await productModel.findById(_id);
+            return result.carts;
+        }
+    } catch (error) {
+        console.log('Error in add cart array service: ', error)
+    }
+    return false;
+};
+
 module.exports = {
     registerMail, registerPhone, registerUser, loginEmail, loginPhone,
     loginUser, changePassword, editProfile, addAddress, deleteAddress,
     editAddress, getProfile, addFavorite, deleteFavorite, addCart, deleteCart, setStatus,
+    setStatusAddress, addCartArray,
 }

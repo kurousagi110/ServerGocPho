@@ -18,9 +18,9 @@ const getCategoryById = async (id) => {
     return false;
 };
 
-const addCategory = async (name) => {
+const addCategory = async (name, image) => {
     try {
-        return await categoryModel.create({name});
+        return await categoryModel.create({name : name, images : image});
     } catch (error) {
         console.log('Error in add category service: ', error)
     }

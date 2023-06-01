@@ -10,9 +10,9 @@ const upload = require('../../components/middle/upload');
 router.get('/get-all-categories', async function(req, res, next) {
     try {
         const result = await categoryController.getAllCategories();
-        return res.status(200).json( { message: 'success' },result);
+        return res.status(200).json( { message: 'success' ,result: result});
     } catch (error) {
-        return res.status(200).json({ message: 'fail' }, {result: null});
+        return res.status(500).json({ message: 'fail', result: null});
     }
 });
 
@@ -21,9 +21,9 @@ router.get('/get-category-by-id/:id', async function(req, res, next) {
     try {
         const id =  req.params.id;
         const result = await categoryController.getCategoryById(id);
-        return res.status(200).json( { message: 'success' },result);
+        return res.status(200).json( { message: 'success' ,result: result});
     } catch (error) {
-        return res.status(200).json({ message: 'fail' }, {result: null});
+        return res.status(200).json({ message: 'fail',result: null});
     }
 });
 
@@ -31,10 +31,11 @@ router.get('/get-category-by-id/:id', async function(req, res, next) {
 router.post('/add-category', async function(req, res, next) {
     try {
         const name = req.body.name;
-        const result = await categoryController.addCategory(name);
-        return res.status(200).json( { message: 'success' },result);
+        const image = req.body.image;
+        const result = await categoryController.addCategory(name, image);
+        return res.status(200).json( { message: 'success' ,result: result});
     }catch (error) {
-        return res.status(200).json({ message: 'fail' }, {result: null});
+        return res.status(200).json({ message: 'fail' , result: null});
     }
 });
 
@@ -44,9 +45,9 @@ router.post('/update-category', async function(req, res, next) {
         const id = req.body.id;
         const name = req.body.name;
         const result = await categoryController.updateCategory(id, name);
-        return res.status(200).json( { message: 'success' },result);
+        return res.status(200).json( { message: 'success' ,result: result});
     } catch (error) {
-        return res.status(200).json({ message: 'fail' }, {result: null});
+        return res.status(200).json({ message: 'fail' , result: null});
     }
 });
 
@@ -55,9 +56,9 @@ router.post('/delete-category/:id', async function(req, res, next) {
     try {
         const id = req.params.id;
         const result = await categoryController.deleteCategory(id);
-        return res.status(200).json( { message: 'success' },result);
+        return res.status(200).json( { message: 'success' ,result: result});
     } catch (error) {
-        return res.status(200).json({ message: 'fail' }, {result: null});
+        return res.status(200).json({ message: 'fail' , result: null});
     }
 });
 
@@ -67,9 +68,9 @@ router.post('/add-image', async function(req, res, next) {
         const id = req.body.id;
         const image = req.body.image;
         const result = await categoryController.addImage(id, image);
-        return res.status(200).json( { message: 'success' },result);
+        return res.status(200).json( { message: 'success' ,result: result});
     } catch (error) {
-        return res.status(200).json({ message: 'fail' }, {result: null});
+        return res.status(200).json({ message: 'fail' , result: null});
     }
 });
 
@@ -79,9 +80,9 @@ router.post('/delete-image/:id', async function(req, res, next) {
         const id = req.params.id;
         const name = req.body.name;
         const result = await categoryController.deleteImage(id ,name);
-        return res.status(200).json( { message: 'success' },result);
+        return res.status(200).json( { message: 'success' ,result: result});
     } catch (error) {
-        return res.status(200).json({ message: 'fail' }, {result: null});
+        return res.status(200).json({ message: 'fail' , result: null});
     }
 });
 

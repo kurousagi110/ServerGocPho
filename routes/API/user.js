@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const jwt = require('jsonwebtoken');
 const controllerUser = require('../../components/user/Controller');
+const controllerBill = require('../../components/bill/Controller');
 
 // /auth/login : Dang nhap
 //http://localhost:3000/user/login-phonenumber
@@ -9,12 +10,13 @@ router.post("/login-phonenumber", async (req, res, next) => {
   try {
     const { phonenumber, password } = req.body;
     const user = await controllerUser.loginPhone(phonenumber, password);
+    const bill = await controllerBill.getBillByUser(phonenumber);
     if (user) {
       const token = jwt.sign({ _id: user._id },
         'secret', { expiresIn: '1h' });
       //lưu token vào session
       req.session.token = token;
-      return res.status(200).json({ result: true, user: user._id, token:token });
+      return res.status(200).json({ result: true, user: user, token:token,bill:bill});
     } else {
       return res.status(400).json({ result: false, user: null });
     }
@@ -25,14 +27,16 @@ router.post("/login-phonenumber", async (req, res, next) => {
 //http://localhost:3000/user/login-email
 router.post("/login-email", async (req, res, next) => {
   try {
-    const { email } = req.body;
-    const user = await controllerUser.loginEmail(email);
+    const { email,avatar,fullname } = req.body;
+    console.log(email)
+    const user = await controllerUser.loginEmail(email, avatar, fullname);
+    const bill = await controllerBill.getBillByUser(email);
     if (user) {
       const token = jwt.sign({ _id: user._id },
         'secret', { expiresIn: '1h' });
       //lưu token vào session
       req.session.token = token;
-      return res.status(200).json({ result: true, user: user._id, token:token });
+      return res.status(200).json({ result: true, user: user, token:token,bill:bill });
     } else {
       return res.status(400).json({ result: false, user: null });
     }
@@ -45,12 +49,13 @@ router.post("/login-username", async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = await controllerUser.loginUser(username, password);
+    const bill = await controllerBill.getBillByUser(username);
     if (user) {
       const token = jwt.sign({ _id: user._id },
         'secret', { expiresIn: '1h' });
       //lưu token vào session
       req.session.token = token;
-      return res.status(200).json({ result: true, user: user._id, token:token });
+      return res.status(200).json({ result: true, user: user, token:token,bill:bill });
     } else {
       return res.status(400).json({ result: false, user: null });
     }
@@ -80,6 +85,7 @@ router.post("/register-email", async (req, res, next) => {
   try {
     const { email } = req.body;
     const user = await controllerUser.registerMail(email);
+    console.log(user,"user ngoai nay ne")
     if (user) {
       return res.status(200).json({ result: true, user: user });
     } else {
@@ -171,7 +177,7 @@ router.post("/add-address", async (req, res, next) => {
     const { _id, address } = req.body;
     const user = await controllerUser.addAddress(_id, address);
     if (user) {
-      return res.status(200).json({ result: true, user: user });
+      return res.status(200).json({ result: true, address: user });
     } else {
       return res.status(400).json({ result: false, user: null });
     }
@@ -183,41 +189,38 @@ router.post("/add-address", async (req, res, next) => {
 //http://localhost:3000/user/delete-address
 router.post("/delete-address", async (req, res, next) => {
   try {
-    const { _id, address } = req.body;
-    const user = await controllerUser.deleteAddress(_id, address);
+    const { _id, idAddress } = req.body;
+    const user = await controllerUser.deleteAddress(_id, idAddress);
     if (user) {
-      return res.status(200).json({ result: true, user: user });
+      return res.status(200).json({ result: true, address: user });
     } else {
-      return res.status(400).json({ result: false, user: null });
+      return res.status(400).json({ result: false, address: null });
     }
   } catch (error) {
-    return res.status(500).json({ result: false, user: null });
+    return res.status(500).json({ result: false, address: null });
   }
 });
 //http://localhost:3000/user/edit-address
 router.post("/edit-address", async (req, res, next) => {
   try {
-    const { _id, address, newaddress } = req.body;
-    const user = await controllerUser.editAddress(_id, address, newaddress);
+    const { _id, idAddress, newAddress } = req.body;
+    const user = await controllerUser.editAddress(_id, idAddress, newAddress);
     if (user) {
-      return res.status(200).json({ result: true, user: user });
+      return res.status(200).json({ result: true, address: user });
     } else {
-      return res.status(400).json({ result: false, user: null });
+      return res.status(400).json({ result: false, address: null });
     }
   } catch (error) {
-    return res.status(500).json({ result: false, user: null });
+    return res.status(500).json({ result: false, address: null });
   }
 });
 //http://localhost:3000/user/add-favorite
 router.post("/add-favorite", async (req, res, next) => {
   try {
     const {_id,idProduct, name, price, image} = req.body;
-    const user = await controllerUser.addFavorite(_id,idProduct, name, price, image);
-    if (user) {
-      return res.status(200).json({ result: true, user: user });
-    } else {
-      return res.status(400).json({ result: false, user: null });
-    }
+    const add = await controllerUser.addFavorite(_id,idProduct, name, price, image);
+    console.log(add);
+      return res.status(200).json({ result: add});
   } catch (error) {
     return res.status(500).json({ result: false, user: null });
   }
@@ -254,15 +257,15 @@ router.post("/add-cart", async (req, res, next) => {
 //http://localhost:3000/user/delete-cart
 router.post("/delete-cart", async (req, res, next) => {
   try {
-    const {_id, name } = req.body;
-    const user = await controllerUser.deleteCart(_id, name);
+    const {_id, idCart } = req.body;
+    const user = await controllerUser.deleteCart(_id, idCart);
     if (user) {
-      return res.status(200).json({ result: true, user: user });
+      return res.status(200).json({ result: true, cart: user });
     } else {
-      return res.status(400).json({ result: false, user: null });
+      return res.status(400).json({ result: false, cart: null });
     }
   } catch (error) {
-    return res.status(500).json({ result: false, user: null });
+    return res.status(500).json({ result: false, cart: null });
   }
 });
 
@@ -278,6 +281,36 @@ router.post("/set-status", async (req, res, next) => {
     }
   } catch (error) {
     return res.status(500).json({ result: false, user: null });
+  }
+});
+//http://localhost:3000/user/set-status-address
+router.post("/set-status-address", async (req, res, next) => {
+  try {
+    const {_id, idAddress } = req.body;
+    const user = await controllerUser.setStatusAddress(_id, idAddress);
+    console.log(user);
+    if (user) {
+      return res.status(200).json({ result: true, addresses: user });
+    } else {
+      return res.status(400).json({ result: false, addresses: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false});
+  }
+});
+//add cart array
+//http://localhost:3000/user/add-cart-array
+router.post("/add-cart-array", async (req, res, next) => {
+  try {
+    const {_id, cart } = req.body;
+    const user = await controllerUser.addCartArray(_id, cart);
+    if (user) {
+      return res.status(200).json({ result: true, cart: user });
+    } else {
+      return res.status(400).json({ result: false, cart: null });
+    }
+  } catch (error) {
+    return res.status(500).json({ result: false, cart: null });
   }
 });
 module.exports = router;

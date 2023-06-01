@@ -24,18 +24,10 @@ const addProduct = async (name, price, quantity, detail, category) => {
     }
     return false;
 };
-const addImage = async (id, image) => {
+const addImage = async (_id, image) => {
     try {
-        let product = await productModel.findById(id);
-        console.log(product);
-        console.log("1111" + image);
-        console.log(product.images);
+        const product = await productModel.findOne({_id : _id});
         if (product) {
-            for (var i = 0; i < product.images.length; i++) {
-                if (product.images[i] == image) {
-                    return true;
-                }
-            }
             product.images.push( {name : image});
             product.save();
             return true;

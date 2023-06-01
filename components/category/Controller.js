@@ -18,9 +18,9 @@ const getCategoryById = async (id) => {
     return false;
 };
 
-const addCategory = async (name) => {
+const addCategory = async (name, image) => {
     try {
-        return await categoryService.addCategory(name);
+        return await categoryService.addCategory(name, image);
     } catch (error) {
         console.log('Error in add category controller: ', error)
     }

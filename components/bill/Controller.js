@@ -1,10 +1,10 @@
 const billService = require('./Service');
 
 //add new bill
-const addBill = async (name,img,price,quantity,address,payment) => {
+const addBill = async (idUser, bill, address, payment,timeDesire,totalPrice) => {
     try {
-        const bill = await billService.addBill(name,img,price,quantity,address,payment);
-        return bill;
+        const resul = await billService.addBill(idUser, bill, address, payment,timeDesire,totalPrice);
+        return resul;
     } catch (error) {
         throw new Error(error);
     }
@@ -72,4 +72,13 @@ const addMoreBillDetail = async (id, name, img, price, quantity) => {
         throw new Error(error);
     }
 }
-module.exports = { addBill, getAllBill, deleteBill, getBillById, updateBillStatus, updateBillDetail, updateBillAddress, addMoreBillDetail };
+//find bill by user
+const getBillByUser = async (user) => {
+    try {
+        const bill = await billService.getBillByUser(user);
+        return bill;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+module.exports = { addBill, getAllBill, deleteBill, getBillById, updateBillStatus, updateBillDetail, updateBillAddress, addMoreBillDetail, getBillByUser };

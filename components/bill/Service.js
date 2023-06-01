@@ -1,17 +1,27 @@
 const billModel = require('./Model');
+const userModel = require('../user/Model');
+
 
 //add new bill
-const addBill = async (name,img,price,quantity,address,payment) => {
+const addBill = async (idUser, bill, address, payment,timeDesire,totalPrice) => {
     try {
-        const newBill = new billModel({
-            detail: [{ name: name, image: img, price: price, quantity: quantity }],
-            address: address,
-            payment: payment,
-            status: [{ number: 1, name: "Đang chờ xử lý", date: new Date() }]
-        });
-        console.log(newBill);
-        const bill = await newBill.save();
-        return bill;
+        let user = await userModel.findOne({ _id: idUser });
+        console.log(user);
+        if (user) {
+            const newBill = new billModel({
+                idUser: idUser,
+                bill: bill,
+                address: address,
+                payment: payment,
+                timeDesire: timeDesire,
+                totalPrice: totalPrice,
+                status: [{ number: 1, name: "Đang xử lý", date: new Date()}]
+            });
+            await newBill.save();
+            console.log(user);
+            return newBill;
+        }
+        return false;
     } catch (error) {
         throw new Error(error);
     }
@@ -59,9 +69,9 @@ const updateBillStatus = async (id, number,name) => {
     }
 };
 //update bill detail
-const updateBillDetail = async (id, name, img, price, quantity) => {
+const updateBillDetail = async (id, name, price, quantity) => {
     try {
-        const bill = await billModel.findByIdAndUpdate(id, { $push: { detail: { name: name, image: img, price: price, quantity: quantity } } });
+        const bill = await billModel.findByIdAndUpdate(id, { $push: { bill: { name: name, price: price, quantity: quantity } } });
         return bill;
     } catch (error) {
         throw new Error(error);
@@ -95,4 +105,13 @@ const addMoreBillDetail = async (id, name, img, price, quantity) => {
         throw new Error(error);
     }
 };
-module.exports = { addBill, getAllBill, deleteBill, getBillById, updateBillStatus, updateBillDetail, updateBillAddress, addMoreBillDetail};
+//get bill by user
+const getBillByUser = async (user) => {
+    try {
+        const bill = await billModel.find({ idUser: user });
+        return bill;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+module.exports = { addBill, getAllBill, deleteBill, getBillById, updateBillStatus, updateBillDetail, updateBillAddress, addMoreBillDetail, getBillByUser};

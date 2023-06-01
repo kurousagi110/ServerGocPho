@@ -21,9 +21,9 @@ const registerUser = async (username, password) => {
         throw error;
     }
 }
-const loginEmail = async (email) => {
+const loginEmail = async (email, avatar , fullname) => {
     try {
-        return await userServices.loginEmail(email);
+        return await userServices.loginEmail(email, avatar , fullname);
     } catch (error) {
         throw error;
     }
@@ -73,16 +73,16 @@ const addAddress = async (_id, address) => {
         throw error;
     }
 }
-const editAddress = async (_id,oldaddress ,newaddress) => {
+const editAddress = async (_id,idAddress ,newaddress) => {
     try {
-        return await userServices.editAddress(_id, oldaddress, newaddress);
+        return await userServices.editAddress(_id, idAddress, newaddress);
     } catch (error) {
         throw error;
     }
 }
-const deleteAddress = async (_id, address) => {
+const deleteAddress = async (_id, idAddress) => {
     try {
-        return await userServices.deleteAddress(_id, address);
+        return await userServices.deleteAddress(_id, idAddress);
     } catch (error) {
         throw error;
     }
@@ -112,9 +112,9 @@ const addCart = async (_id, name, price, quantity, image) => {
         throw error;
     }
 }
-const deleteCart = async (_id, name) => {
+const deleteCart = async (_id, idCart) => {
     try {
-        return await userServices.deleteCart(_id, name);
+        return await userServices.deleteCart(_id, idCart);
     } catch (error) {
         throw error;
     }
@@ -128,5 +128,22 @@ const setStatus = async (_id, status) => {
         throw error;
     }
 }
+//set status adress
+const setStatusAddress = async (_id, idAddress) => {
+    try {
+        return await userServices.setStatusAddress(_id, idAddress);
+    } catch (error) {
+        throw error;
+    }
+};
+//add cart array
+const addCartArray = async (_id, cart) => {
+    try {
+        return await userServices.addCartArray(_id, cart);
+    } catch (error) {
+        throw error;
+    }
+};
 module.exports = {registerMail, registerPhone, registerUser, loginUser, loginEmail, loginPhone, changePassword, editProfile, getProfile,
-                    addAddress, editAddress, deleteAddress, addFavorite, deleteFavorite, addCart, deleteCart, setStatus}
+                    addAddress, editAddress, deleteAddress, addFavorite, deleteFavorite, addCart, deleteCart, setStatus, setStatusAddress, 
+                    addCartArray}

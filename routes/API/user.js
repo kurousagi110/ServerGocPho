@@ -98,8 +98,8 @@ router.post("/register-email", async (req, res, next) => {
 //http://localhost:3000/user/register-username
 router.post("/register-username", async (req, res, next) => {
   try {
-    const { username, password } = req.body;
-    const user = await controllerUser.registerUser(username, password);
+    const { username, password, fullname } = req.body;
+    const user = await controllerUser.registerUser(username, password, fullname);
     if (user) {
       return res.status(200).json({ result: true, user: user });
     } else {

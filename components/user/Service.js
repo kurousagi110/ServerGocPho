@@ -36,13 +36,14 @@ const registerPhone = async (phonenumber, password) => {
     return false;
 }
 //tao acc bằng username
-const registerUser = async (username, password) => {
+const registerUser = async (username, password, fullname) => {
     try {
         const checkUser = await productModel.findOne({ username: username });
         if (!checkUser) {
             await productModel.create({
                 username: username,
                 password: password,
+                fullname: fullname,
             });
             return true;
         }

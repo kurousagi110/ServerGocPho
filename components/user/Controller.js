@@ -14,9 +14,9 @@ const registerPhone = async (phonenumber, password) => {
         throw error;
     }
 }
-const registerUser = async (username, password) => {
+const registerUser = async (username, password, fullname) => {
     try {
-        return await userServices.registerUser(username, password);
+        return await userServices.registerUser(username, password, fullname);
     } catch (error) {
         throw error;
     }
